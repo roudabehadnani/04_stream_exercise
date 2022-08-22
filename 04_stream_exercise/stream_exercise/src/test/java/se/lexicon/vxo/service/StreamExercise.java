@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
 import java.util.function.ToIntFunction;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,6 +32,7 @@ public class StreamExercise {
         List<Integer> integers = Arrays.asList(1,2,3,4,5,6,7,8,9,10);
 
         //Write code here
+        integers.stream().forEach(integer -> System.out.println(integer));
 
     }
 
@@ -42,7 +44,7 @@ public class StreamExercise {
         long amount = 0;
 
         //Write code here
-
+        amount = people.stream().count();
         assertEquals(10000, amount);
     }
 
@@ -55,6 +57,9 @@ public class StreamExercise {
         int expected = 90;
 
         //Write code here
+        amount = people.stream()
+                .filter(person -> person.getLastName().equals("Andersson"))
+                .count();
 
         assertEquals(expected, amount);
     }
@@ -68,7 +73,9 @@ public class StreamExercise {
         List<Person> females = null;
 
         //Write code here
-
+        females = people.stream()
+                 .filter(person -> person.getGender().equals(Gender.FEMALE))
+                        .collect(Collectors.toList());
 
         assertNotNull(females);
         assertEquals(expectedSize, females.size());
@@ -83,6 +90,9 @@ public class StreamExercise {
         Set<LocalDate> dates = null;
 
         //Write code here
+        dates = people.stream()
+                .map(person -> person.getDateOfBirth())
+                .collect(Collectors.toCollection(TreeSet::new));
 
         assertNotNull(dates);
         assertTrue(dates instanceof TreeSet);
@@ -99,6 +109,9 @@ public class StreamExercise {
         Person[] result = null;
 
         //Write code here
+        result = people.stream()
+                        .filter(person -> person.getFirstName().equals("Erik"))
+                                .toArray(Person[]::new);
 
         assertNotNull(result);
         assertEquals(expectedLength, result.length);
@@ -114,6 +127,9 @@ public class StreamExercise {
         Optional<Person> optional = null;
 
         //Write code here
+        optional = people.stream()
+                        .filter(person -> person.getPersonId() == 5436)
+                                .findFirst();
 
         assertNotNull(optional);
         assertTrue(optional.isPresent());
