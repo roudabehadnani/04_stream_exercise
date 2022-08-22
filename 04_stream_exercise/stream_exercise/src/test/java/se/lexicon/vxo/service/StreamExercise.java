@@ -8,6 +8,7 @@ import se.lexicon.vxo.model.PersonDto;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
@@ -146,6 +147,8 @@ public class StreamExercise {
         Optional<Person> optional = null;
 
         //Write code here
+        optional = people.stream()
+                        .min(Comparator.comparing(person -> person.getDateOfBirth()));
 
         assertNotNull(optional);
         assertEquals(expectedBirthDate, optional.get().getDateOfBirth());
@@ -162,6 +165,10 @@ public class StreamExercise {
         List<PersonDto> dtoList = null;
 
         //Write code here
+        dtoList = people.stream()
+                        .filter(person -> person.getDateOfBirth().isBefore(date))
+                        .map(person -> new PersonDto(person.getPersonId(), person.getFirstName() + " " + person.getLastName()))
+                        .collect(Collectors.toList());
 
         assertNotNull(dtoList);
         assertEquals(expectedSize, dtoList.size());
@@ -179,6 +186,11 @@ public class StreamExercise {
         Optional<String> optional = null;
 
         //Write code here
+        optional = people.stream()
+                        .filter(person -> person.getPersonId() == personId)
+                                .map(person -> person.getDateOfBirth())
+                                        .map(date -> date.getDayOfWeek() + " "+ date.getDayOfMonth() + " " + date.getMonth() + " " + date.getYear())
+                                                .findFirst();
 
         assertNotNull(optional);
         assertTrue(optional.isPresent());
@@ -197,6 +209,10 @@ public class StreamExercise {
         double averageAge = 0;
 
         //Write code here
+        averageAge = people.stream()
+                        .mapToInt(personToAge)
+                                .average().orElse(0);
+
 
         assertTrue(averageAge > 0);
         assertEquals(expected, averageAge, .01);
@@ -212,6 +228,13 @@ public class StreamExercise {
         String[] result = null;
 
         //Write code here
+        Predicate<String> palindrome = name -> name.equalsIgnoreCase(new StringBuilder(name).reverse().toString());
+
+        result = people.stream()
+                        .map(person -> person.getFirstName())
+                            .distinct()
+                                .filter(palindrome)
+                                        .sorted().toArray(String[]::new);
 
         assertNotNull(result);
         assertArrayEquals(expected, result);
@@ -226,6 +249,8 @@ public class StreamExercise {
         Map<String, List<Person>> personMap = null;
 
         //Write code here
+        personMap = people.stream()
+                        .collect(Collectors.groupingBy(person -> person.getLastName()));
 
         assertNotNull(personMap);
         assertEquals(expectedSize, personMap.size());
