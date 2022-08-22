@@ -7,10 +7,12 @@ import se.lexicon.vxo.model.PersonDto;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.Year;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -264,7 +266,9 @@ public class StreamExercise {
         LocalDate[] _2020_dates = null;
 
         //Write code here
-
+        _2020_dates = Stream.iterate(LocalDate.parse("2020-01-01"), LocalDate -> LocalDate.plusDays(1))
+                        .limit(Year.of(2020).isLeap() ? 366 : 365)
+                                .toArray(LocalDate[]::new);
 
         assertNotNull(_2020_dates);
         assertEquals(366, _2020_dates.length);
